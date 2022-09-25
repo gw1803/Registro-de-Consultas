@@ -10,6 +10,7 @@ public class Main {
     public static void main(String[] args) {
         Sistema sis = new Sistema();
         sis.init();
+        
         int opcao = -1;
         Scanner scn = new Scanner(System.in);
         System.out.println("Olá, seja bem vindo(a) ao sistema de Registro de Consultas!\n");
@@ -23,6 +24,7 @@ public class Main {
             LocalDate ld;
             String data;
             Long numero;
+            
             Paciente p = new Paciente();
             Endereco e = new Endereco();
             
@@ -76,7 +78,7 @@ public class Main {
                     if(g == true){
                         System.out.println("\n Usuário criado com Sucesso!");
                     } else{
-                        System.out.println("\n Usuário não foi criado! Verifique se já há algum paciente com\n o mesmo número CNS cadastrado, ou se há um paciente com nome e\nnome da mãe iguais.");
+                        System.out.println("\n Usuário não foi criado! Verifique se já há algum paciente com\n o mesmo número CNS cadastrado, ou se há um paciente com nome e\n nome da mãe iguais.");
                     }
                     
                     
@@ -194,16 +196,30 @@ public class Main {
                     }
                     break;
                 case 5:
+                    System.out.print("\n---------------------------------------------\n");
                     Paciente pacientes[] = sis.listarPacientes();
                     
-                    System.out.println("\nNumero CNS\tNome\tNome da mãe\tTelefone");
+                    System.out.printf("%s%10s%37s%37s","Numero CNS","Nome","Nome da mãe","Telefone");
                         
                     for (int i = 0; i < pacientes.length; i++) {
                         if(pacientes[i] == null){
                             i = pacientes.length;
-                        } else
-                            System.out.println("\n"+pacientes[i].numCNS+"\t"+pacientes[i].nome+"\t\t"+pacientes[i].nomeMae+"\t\t"+pacientes[i].telefone);
+                        } else{
+                            String nomeFinal = pacientes[i].nome;
+                            String nomeMaeFinal = pacientes[i].nomeMae;
+                        
+                            if(pacientes[i].nome.chars().filter(ch -> ch != ' ').count() > 26 ){
+                                String nomeCortado = pacientes[i].nome.substring(0, 23) ;
+                                nomeFinal = nomeCortado.concat("(...)");
+                            } 
+                            if(pacientes[i].nomeMae.chars().filter(ch -> ch != ' ').count() > 26 ){
+                                String nomeCortado = pacientes[i].nomeMae.substring(0, 23) ;
+                                nomeMaeFinal = nomeCortado.concat("(...)");
+                            } 
+                            System.out.printf("\n%3s%-13d%-30s%-40s%s"," ",pacientes[i].numCNS,nomeFinal,nomeMaeFinal,pacientes[i].telefone);
+                        }
                     }
+                    System.out.print("\n---------------------------------------------");
                     break;
                 default:
                     System.out.println("Opção inválida! ");
