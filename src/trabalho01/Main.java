@@ -1,6 +1,8 @@
 
 package trabalho01;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Main {
@@ -12,19 +14,23 @@ public class Main {
         Scanner scn = new Scanner(System.in);
         System.out.println("Olá, seja bem vindo(a) ao sistema de Registro de Consultas!\n");
         do{
-            System.out.print("\n1 - Criar ficha de paciente.\n2 - Ver dados de Paciente.\n3 - Atualizar dados de paciente\n4 - Excluir dados de paciente.\n0 - Sair\n\nSelecione uma opção: ");
+            System.out.print("\n1 - Criar ficha de paciente.\n2 - Ver dados de Paciente.\n3 - Atualizar dados de paciente.\n4 - Excluir dados de paciente.\n5 - Listar pacientes.\n0 - Sair\n\nSelecione uma opção: ");
             opcao = scn.nextInt();
-            boolean g = false;
+            
+            String[] dataVetor;
+            boolean g;
+            boolean h;
+            LocalDate ld;
+            String data;
+            Long numero;
             Paciente p = new Paciente();
+            Endereco e = new Endereco();
             
             switch (opcao) {
                 case 0:
                     break;
                 case 1:
                     System.out.print("---------------------------------------------");
-                    
-                    Endereco e = new Endereco();
-                    
                     System.out.println("\nInsira as devidas informações sobre o paciente a serem cadastradas!");
                     System.out.print("---------------------------------------------");
                     
@@ -34,9 +40,13 @@ public class Main {
                     System.out.print("\nNúmero CNS: ");
                     p.numCNS = scn.nextLong(); 
                     
-                    System.out.print("\nData de nascimento: ");
-                    p.dataNasc = scn.next();
+                    System.out.print("\nData de nascimento(dia-mês-ano): ");
+                    data = scn.next();
+                    dataVetor = data.split("-");
+                    ld = LocalDate.of(Integer.parseInt(dataVetor[2]), Integer.parseInt(dataVetor[1]), Integer.parseInt(dataVetor[0]));
                     
+                    p.dataNasc = ld;
+                            
                     System.out.print("\nSexo(1 para masculino/0 para feminino): ");
                     p.sexo = scn.nextInt();
                     
@@ -66,7 +76,7 @@ public class Main {
                     if(g == true){
                         System.out.println("\n Usuário criado com Sucesso!");
                     } else{
-                        System.out.println("\n Usuário não foi criado!");
+                        System.out.println("\n Usuário não foi criado! Verifique se já há algum paciente com\n o mesmo número CNS cadastrado, ou se há um paciente com nome e\nnome da mãe iguais.");
                     }
                     
                     
@@ -75,21 +85,125 @@ public class Main {
                 case 2:
                     System.out.print("---------------------------------------------");
                     System.out.print("\nInsira o número CNS do paciente: ");
-                    Long numero = scn.nextLong();
+                    numero = scn.nextLong();
                     g = sis.verificarPaciente(numero);
                     if(g == true){
                         p = sis.retornarPaciente(numero);
-                        System.out.println("\nNome\tNumero CNS\tNome da mãe\tData de Nscimento\tSexo\tTelefone\tUF\tCidade\tLogradouro\tNumero");
-                        System.out.println("\n"+p.nome+"\t"+p.numCNS+"\t\t"+p.nomeMae+"\t\t"+p.dataNasc+"\t\t\t"+p.sexo+"\t"+p.telefone+"\t"+p.endereco.uf+"\t"+p.endereco.cidade+"\t"+p.endereco.logradouro+"\t\t"+p.endereco.numero);
+                        
+                        System.out.print("\nNome: "+p.nome);
+                        System.out.print("\nNome da mãe: "+p.nomeMae);
+                        System.out.print("\nData de Nascimento: "+ p.dataNasc.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                        System.out.print("\nSexo: "+p.sexo);
+                        System.out.print("\nTelefone: "+p.telefone);
+                        System.out.print("\nUF: "+p.endereco.uf);
+                        System.out.print("\nCidade: "+p.endereco.cidade);
+                        System.out.print("\nLogradouro: "+p.endereco.logradouro);
+                        System.out.print("\nNúmero: "+p.endereco.numero);
+                    } else{
+                        System.out.println("\nNão existe paciente cadastrado com esse número!");
+                    }
+                    System.out.print("\n---------------------------------------------");
+                    break;
+                    
+                case 3:
+                    System.out.print("---------------------------------------------");
+                    System.out.print("\nInsira o número CNS do paciente cujos dados serão alterados: ");
+                    numero = scn.nextLong();
+                    
+                    g = sis.verificarPaciente(numero);
+                    if(g == true){
+                        System.out.print("---------------------------------------------");
+                        System.out.println("\nInsira as devidas informações sobre o paciente a serem alteradas!");
+                        System.out.print("---------------------------------------------");
+
+                        System.out.print("\nNome: ");
+                        p.nome = scn.next();  
+
+                        p.numCNS = numero; 
+
+                        System.out.print("\nData de nascimento(dia-mês-ano): ");
+                        data = scn.next();
+                        dataVetor = data.split("-");
+                        ld = LocalDate.of(Integer.parseInt(dataVetor[2]), Integer.parseInt(dataVetor[1]), Integer.parseInt(dataVetor[0]));
+
+                        p.dataNasc = ld;
+
+                        System.out.print("\nSexo(1 para masculino/0 para feminino): ");
+                        p.sexo = scn.nextInt();
+
+                        System.out.print("\nNome da mãe: ");
+                        p.nomeMae = scn.next(); 
+
+                        System.out.print("\nTelefone de contato: ");
+                        p.telefone = scn.nextInt(); 
+
+                        System.out.print("\n(Endereco)\nCidade: ");
+                        e.cidade = scn.next();
+
+                        System.out.print("\nUF: ");
+                        e.uf = scn.next();
+
+                        System.out.print("\nLogradouro: ");
+                        e.logradouro = scn.next();
+
+                        System.out.print("\nNúmero: ");
+                        e.numero = scn.nextInt();
+
+                        p.endereco = e;
+                        System.out.print("---------------------------------------------");
+                        
+                        h = sis.alterarPaciente(p);
+                        
+                        if(h==true){
+                            System.out.println("\nPaciente alterado com sucesso!");
+                        } else{
+                            System.out.println("\nPaciente não foi alterado!");
+                        }
                     } else{
                         System.out.println("\nNão existe paciente cadastrado com esse número!");
                     }
                     System.out.print("---------------------------------------------");
                     break;
-                case 3:
-                    
-                    break;
                 case 4:
+                    System.out.print("---------------------------------------------");
+                    System.out.print("\nInsira o número CNS do paciente a ser deletado: ");
+                    numero = scn.nextLong();
+                    
+                    g = sis.verificarPaciente(numero);
+                    if(g == true){
+                        int decisao = -1;
+                        while(decisao<0 || decisao>1){
+                            System.out.print("\nConfirme sua decisão(1 - quero deletar, 0 - não quero deletar): ");
+                            decisao = scn.nextInt();
+                            if(decisao<0 || decisao>1){
+                                System.out.println("\nOpção inválida!");
+                            }
+                        }
+                        if(decisao == 1){
+                            h = sis.excluir(numero);
+                            if(h==true){
+                                System.out.println("\nPaciente excluido com sucesso!");
+                            } else{
+                                System.out.println("\nO paciente não foi excluído!");
+                            }
+                        } else{
+                            break;
+                        }
+                    } else{
+                        System.out.println("Não existe paciente cadastrado com esse núemro CNS!");
+                    }
+                    break;
+                case 5:
+                    Paciente pacientes[] = sis.listarPacientes();
+                    
+                    System.out.println("\nNumero CNS\tNome\tNome da mãe\tTelefone");
+                        
+                    for (int i = 0; i < pacientes.length; i++) {
+                        if(pacientes[i] == null){
+                            i = pacientes.length;
+                        } else
+                            System.out.println("\n"+pacientes[i].numCNS+"\t"+pacientes[i].nome+"\t\t"+pacientes[i].nomeMae+"\t\t"+pacientes[i].telefone);
+                    }
                     break;
                 default:
                     System.out.println("Opção inválida! ");
