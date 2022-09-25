@@ -1,9 +1,10 @@
 package trabalho01;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Paciente {
     long numCNS;
-    String nome, nomeMae, dataNasc;
+    String nome, nomeMae;
+    LocalDate dataNasc;
     int sexo, telefone;
     Endereco endereco;
     
