@@ -3,8 +3,9 @@ import java.time.LocalDate;
 //A classe sistema não tem Main
 public class Sistema {
     Paciente[] pacientes = new Paciente[100];
-    Anamnese[] anamneses;
+    Anamnese[] anamneses = new Anamnese[100];
     int contador = 0;
+    int contadorA = 0;
     
     boolean addPaciente(Paciente p){
         //verifica se o vetor de pacientes existe
@@ -38,6 +39,17 @@ public class Sistema {
         return false;
     }
     
+    boolean verificarPacienteNome(String nome){
+        for (int i = 0; i < this.pacientes.length; i++) {
+            if(pacientes[i]!= null){
+                if(pacientes[i].nome.equals(nome)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     //retorna o paciente pelo numeroCNS
     Paciente retornarPaciente(Long numero){
         for (int i = 0; i < this.pacientes.length; i++) {
@@ -49,6 +61,21 @@ public class Sistema {
         return p;
     }
     
+    Paciente[] retornarPacientes(String nome){
+        Paciente[] p = new Paciente[pacientes.length];
+        int cont = 0;
+        
+        for (int i = 0; i < this.pacientes.length; i++) {
+            if(this.pacientes[i]!=null){
+                if(this.pacientes[i].nome.equals(nome)){
+                        p[cont] = pacientes[i];
+                        cont++;
+                }
+            }
+        }
+        return p;
+    }
+     
     boolean alterarPaciente(Paciente pAlterado){
         
         for (int i = 0; i < this.pacientes.length; i++) {
@@ -63,42 +90,66 @@ public class Sistema {
         return true;        
     }
     
-    boolean addAnamnese(Anamnese a){
-        
-        return true;
-    }
-    
-    boolean excluir(long numero){
-        for (int i = 0; i < this.pacientes.length; i++) {
-            if(pacientes[i]!= null){
-                if(numero == this.pacientes[i].numCNS){
-                    this.pacientes[i] = null;
-                }
-            }
-        }
-        for (int i = 0; i < this.pacientes.length; i++) {
-            if(pacientes[i]== null && i != pacientes.length-1){
-                if(pacientes[i+1] != null){
-                    pacientes[i] = pacientes[i+1];
-                    pacientes[i+1] = null;
-                }
-            }
-        }
-        if(this.verificarPaciente(numero) == true){
-            return false;
-        }
-        return true;
-    }
-    
     Paciente[] listarPacientes(){
         return pacientes;
     }
+    
+    boolean excluirPaciente(long numero){
+       for (int i = 0; i < this.pacientes.length; i++) {
+           if(pacientes[i]!= null){
+               if(numero == this.pacientes[i].numCNS){
+                   this.pacientes[i] = null;
+               }
+           }
+       }
+       for (int i = 0; i < this.pacientes.length; i++) {
+           if(pacientes[i]== null && i != pacientes.length-1){
+               if(pacientes[i+1] != null){
+                   pacientes[i] = pacientes[i+1];
+                   pacientes[i+1] = null;
+               }
+           }
+       }
+       if(this.verificarPaciente(numero) == true){
+           return false;
+       }
+       return true;
+   }
+    
+    boolean addAnamnese(Anamnese a, Long n) {
+       if (anamneses != null) {
+           if (verificarPaciente(n)) {
+               Paciente pa = new Paciente();
+               pa = retornarPaciente(n);
+               a.paciente = pa;
+               anamneses[contadorA] = a;
+               this.contadorA = this.contadorA + 1;
+               return true;
+           }
+       }
+       return false;
+   }
             
+    Anamnese[] listarAnamneses(Paciente[] p){
+        Anamnese[] a = new Anamnese[100];
+        int cont = 0;
+        
+        for (int i = 0; i < this.anamneses.length; i++) {
+            if(this.anamneses[i]!= null){
+                if(this.anamneses[i].paciente.nome.equals(p[0].nome)){
+                        a[cont] = anamneses[i];
+                        cont++;
+                    }
+            }
+            
+        }
+        return a;
+    }
     void init(){
         Paciente p = new Paciente();
         Endereco e = new Endereco();
         
-        p.nome = "Bielaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        p.nome = "Biel";
         p.nomeMae = "Rosa";
         p.numCNS = 1;
         LocalDate data = LocalDate.of(2004, 03, 18);
@@ -115,7 +166,7 @@ public class Sistema {
         
         Paciente p1 = new Paciente();
         Endereco e1 = new Endereco();
-        p1.nome = "Jorgeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+        p1.nome = "Jorge";
         p1.nomeMae = "Maria Fernandina Josefina Barbosina";
         p1.numCNS = 2;
         data = LocalDate.of(2000, 03, 03);
@@ -176,5 +227,30 @@ public class Sistema {
         e4.uf = "MG";
         p4.endereco = e4;
         addPaciente(p4);
+        
+        Anamnese a = new Anamnese();
+        a.paciente = p;
+        a.historico = "1";
+        a.id = 1;
+        a.motivo = "1";
+        a.queixa = "123";
+        addAnamnese(a,p.numCNS);
+        
+        Anamnese a1 = new Anamnese();
+        a1.paciente = p1;
+        a1.historico = "2";
+        a1.id = 2;
+        a1.motivo = "2";
+        a1.queixa = "123";
+        addAnamnese(a1,p1.numCNS);
+        
+        Anamnese a2 = new Anamnese();
+        a2.paciente = p1;
+        a2.historico = "2";
+        a2.id = 3;
+        a2.motivo = "2";
+        a2.queixa = "123";
+        addAnamnese(a2,p1.numCNS);
     }
+
 }
