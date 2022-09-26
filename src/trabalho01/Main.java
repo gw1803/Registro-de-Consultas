@@ -275,7 +275,7 @@ public class Main {
 
                                 break;
                             case 2:
-                                System.out.print("\n Informe o nome do Paciente: ");
+                                System.out.print("\nInforme o nome do Paciente: ");
                                 String nome = scn.next();
 
                                 if(sis.verificarPacienteNome(nome)){
@@ -284,13 +284,29 @@ public class Main {
                                     pacientesNome = sis.retornarPacientes(nome);
                                     anamneses = sis.listarAnamneses(pacientesNome);
                                     
-                                    System.out.printf("%-10s%s%20s","Anamneses", "Nome", "Nome da mãe");
+                                    System.out.printf("%s%10s%20s","Anamneses", "Nome", "Nome da mãe");
+                                    int cont = 0;
                                     for (int i = 0; i < anamneses.length; i++) {
                                         if(anamneses[i]!= null){
-                                            System.out.printf("\n%-10d%s%30s",anamneses[i].id, anamneses[i].paciente.nome,anamneses[i].paciente.nomeMae);
+                                            cont++;
+                                            System.out.printf("\n%d%s%3s%15s%43s",i,":",anamneses[i].id, anamneses[i].paciente.nome,anamneses[i].paciente.nomeMae);
                                         }
                                     }
-                                    System.out.print("\nSelecione uma anamnese: ");
+                                    System.out.print("\n\nInsira a anamnese desejada: ");
+                                    int opcao2 = scn.nextInt();
+                                    
+                                    while(opcao2<0 || opcao2 >= cont){
+                                        System.out.println("Opção inválida");
+                                        System.out.print("\nInsira a anamnese desejada: ");
+                                        opcao2 = scn.nextInt();
+                                    }
+                                    
+                                    System.out.println("----------------------------");
+                                    System.out.println("Nome do Paciente: "+anamneses[opcao2].paciente.nome);
+                                    System.out.println("Motivo: "+anamneses[opcao2].motivo);
+                                    System.out.println("Historico: "+anamneses[opcao2].historico);
+                                    System.out.println("Queixa: "+anamneses[opcao2].queixa);
+                                    System.out.println("----------------------------");
                                     
                                 } else{
                                     System.out.println("\nNão há paciente com esse nome!\n");
@@ -300,8 +316,58 @@ public class Main {
                             case 3:
                                 break;
                             case 4:
+                                System.out.print("---------------------------------------------");
+                                System.out.print("\nInsira o id da anamnese do paciente a ser deletada: ");
+                                numero = scn.nextLong();
+
+                                g = sis.verificarAnamnese(numero);
+                                
+                                if(g == true){
+                                    int decisao = -1;
+                                    while(decisao<0 || decisao>1){
+                                        System.out.print("\nConfirme sua decisão(1 - quero deletar, 0 - não quero deletar): ");
+                                        decisao = scn.nextInt();
+                                        if(decisao<0 || decisao>1){
+                                            System.out.println("\nOpção inválida!");
+                                        }
+                                    }
+                                    if(decisao == 1){
+                                        boolean h = sis.excluirAnamnese(numero);
+                                        if(h ==true){
+                                            System.out.println("\nAnamnese excluida com sucesso!");
+                                        } else{
+                                            System.out.println("\nA anamnese não foi excluída!");
+                                        }
+                                    } else{
+                                        break;
+                                    }
+                                } else{
+                                    System.out.println("Não existe anamnese cadastrada com esse ID!");
+                                }
                                 break;
                             case 5:
+                                  
+                                System.out.print("\n---------------------------------------------\n");
+                                Anamnese anamneses[] = sis.listarAnamnese();
+
+                                System.out.printf("%11s%15s%13s%37s%46s%37s","Id Anamnese", "Numero CNS","Paciente","Motivo","Historico", "Queixa");
+
+                                for (int i = 0; i < anamneses.length; i++) {
+                                    if(anamneses[i] == null){
+                                        i = anamneses.length;
+                                    } else{
+                                        String nomeFinal = anamneses[i].paciente.nome;
+      
+
+                                        if(anamneses[i].paciente.nome.chars().filter(ch -> ch != ' ').count() > 26 ){
+                                            String nomeCortado = anamneses[i].paciente.nome.substring(0, 23) ;
+                                            nomeFinal = nomeCortado.concat("(...)");
+                                        } 
+                                        
+                                        System.out.printf("\n%3s%s%16s%-13d%-38s%-43s%-40s%s"," ",i," ",anamneses[i].paciente.numCNS,nomeFinal,anamneses[i].motivo, anamneses[i].historico, anamneses[i].queixa);
+                                    }
+                                }
+                                System.out.print("\n---------------------------------------------");
                                 break;
                             default:
                                 System.out.println("Opção inválida! ");

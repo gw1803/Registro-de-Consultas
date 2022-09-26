@@ -145,6 +145,46 @@ public class Sistema {
         }
         return a;
     }
+
+    boolean verificarAnamnese(Long numero){
+        for (int i = 0; i < this.anamneses.length; i++) {
+            if(anamneses[i]!= null){
+                if(numero == this.anamneses[i].id){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+ 
+    boolean excluirAnamnese(long numero){
+         
+       for (int i = 0; i < this.anamneses.length; i++) {
+           if(anamneses[i]!= null){
+               if(numero == this.anamneses[i].id){
+                   this.anamneses[i] = null;
+               }
+           }
+       }
+       for (int i = 0; i < this.anamneses.length; i++) {
+           if(anamneses[i]== null && i != anamneses.length-1){
+               if(anamneses[i+1] != null){
+                   anamneses[i] = anamneses[i+1];
+                   anamneses[i+1] = null;
+               }
+           }
+       }
+       
+       if(this.verificarAnamnese(numero) == true){
+           return false;
+       }
+       return true;
+   }
+
+    Anamnese[] listarAnamnese(){
+        return anamneses;
+    }
+      
     void init(){
         Paciente p = new Paciente();
         Endereco e = new Endereco();
