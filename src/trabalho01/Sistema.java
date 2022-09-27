@@ -180,6 +180,31 @@ public class Sistema {
        }
        return true;
    }
+    
+    boolean verificarAnamnesePaciente(Long numero){
+        for (int i = 0; i < this.anamneses.length; i++) {
+            if(anamneses[i]!= null){
+                if(this.anamneses[i].paciente.numCNS == numero){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+        boolean alterarAnamnese(Anamnese aAlterado){
+        
+        for (int i = 0; i < this.anamneses.length; i++) {
+            if(anamneses[i]!= null){
+                if(aAlterado.id == this.anamneses[i].id){
+                    this.anamneses[i] = aAlterado;
+                    return true;
+                }
+            }
+        }
+        
+        return true;        
+    }
 
     Anamnese[] listarAnamnese(){
         return anamneses;
@@ -189,13 +214,13 @@ public class Sistema {
         Paciente p = new Paciente();
         Endereco e = new Endereco();
         
-        p.nome = "Biel";
+        p.nome = "Jorge";
         p.nomeMae = "Rosa";
         p.numCNS = 1;
         LocalDate data = LocalDate.of(2004, 03, 18);
         
         p.dataNasc = data;
-        p.sexo = 1;
+        p.sexo = Sexo.MASCULINO;
         p.telefone = 123123123;
         e.cidade = "Timoteo";
         e.logradouro = "sei la";
@@ -211,7 +236,7 @@ public class Sistema {
         p1.numCNS = 2;
         data = LocalDate.of(2000, 03, 03);
         p1.dataNasc = data;
-        p1.sexo = 1;
+        p.sexo = Sexo.MASCULINO;
         p1.telefone = 123123123;
         e1.cidade = "Timoteo";
         e1.logradouro = "sei la";
@@ -227,7 +252,7 @@ public class Sistema {
         p2.numCNS = 3;
         data = LocalDate.of(1980, 10, 18);
         p2.dataNasc = data;
-        p2.sexo = 0;
+        p.sexo = Sexo.FEMININO;
         p2.telefone = 123123123;
         e2.cidade = "Cel. Fabriciano";
         e2.logradouro = "22";
@@ -243,7 +268,7 @@ public class Sistema {
         p3.numCNS = 4;
         data = LocalDate.of(1985, 10, 18);
         p3.dataNasc = data;
-        p3.sexo = 0;
+        p.sexo = Sexo.FEMININO;
         p3.telefone = 123123123;
         e3.cidade = "Cel. Fabriciano";
         e3.logradouro = "23";
@@ -259,7 +284,7 @@ public class Sistema {
         p4.numCNS = 5;
         data = LocalDate.of(1950, 12, 15);
         p4.dataNasc = data;
-        p4.sexo = 1;
+        p.sexo = Sexo.MASCULINO;
         p4.telefone = 123123123;
         e4.cidade = "Ipatinga";
         e4.logradouro = "07";
@@ -271,7 +296,7 @@ public class Sistema {
         Anamnese a = new Anamnese();
         a.paciente = p;
         a.historico = "1";
-        a.id = 1;
+        a.id = 0;
         a.motivo = "1";
         a.queixa = "123";
         addAnamnese(a,p.numCNS);
@@ -279,7 +304,7 @@ public class Sistema {
         Anamnese a1 = new Anamnese();
         a1.paciente = p1;
         a1.historico = "2";
-        a1.id = 2;
+        a1.id = 1;
         a1.motivo = "2";
         a1.queixa = "123";
         addAnamnese(a1,p1.numCNS);
@@ -287,7 +312,7 @@ public class Sistema {
         Anamnese a2 = new Anamnese();
         a2.paciente = p1;
         a2.historico = "2";
-        a2.id = 3;
+        a2.id = 2;
         a2.motivo = "2";
         a2.queixa = "123";
         addAnamnese(a2,p1.numCNS);

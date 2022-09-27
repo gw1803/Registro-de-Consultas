@@ -31,7 +31,8 @@ public class Main {
                         LocalDate ld;
                         String data;
                         Long numero;
-
+                        int sex;
+                        
                         Paciente p = new Paciente();
                         Endereco e = new Endereco();
 
@@ -57,8 +58,18 @@ public class Main {
                                 p.dataNasc = ld;
 
                                 System.out.print("\nSexo(1 para masculino/0 para feminino): ");
-                                p.sexo = scn.nextInt();
-
+                                sex = scn.nextInt();
+                                
+                                while(sex<0 || sex>1){
+                                    System.out.println("Valor inválido!");
+                                    System.out.print("\nSexo(1 para masculino/0 para feminino): ");
+                                    sex = scn.nextInt();
+                                }
+                                if(sex == 1)
+                                    p.sexo = Sexo.MASCULINO;
+                                else
+                                    p.sexo = Sexo.FEMININO;
+                                
                                 System.out.print("\nNome da mãe: ");
                                 p.nomeMae = scn.next(); 
 
@@ -138,7 +149,17 @@ public class Main {
                                     p.dataNasc = ld;
 
                                     System.out.print("\nSexo(1 para masculino/0 para feminino): ");
-                                    p.sexo = scn.nextInt();
+                                    sex = scn.nextInt();
+
+                                    while(sex<0 || sex>1){
+                                        System.out.println("Valor inválido!");
+                                        System.out.print("\nSexo(1 para masculino/0 para feminino): ");
+                                        sex = scn.nextInt();
+                                    }
+                                    if(sex == 1)
+                                        p.sexo = Sexo.MASCULINO;
+                                    else
+                                        p.sexo = Sexo.FEMININO;
 
                                     System.out.print("\nNome da mãe: ");
                                     p.nomeMae = scn.next(); 
@@ -179,24 +200,33 @@ public class Main {
                                 numero = scn.nextLong();
 
                                 g = sis.verificarPaciente(numero);
+                                
+                                
+                                
+                                
                                 if(g == true){
-                                    int decisao = -1;
-                                    while(decisao<0 || decisao>1){
-                                        System.out.print("\nConfirme sua decisão(1 - quero deletar, 0 - não quero deletar): ");
-                                        decisao = scn.nextInt();
-                                        if(decisao<0 || decisao>1){
-                                            System.out.println("\nOpção inválida!");
-                                        }
-                                    }
-                                    if(decisao == 1){
-                                        h = sis.excluirPaciente(numero);
-                                        if(h==true){
-                                            System.out.println("\nPaciente excluido com sucesso!");
-                                        } else{
-                                            System.out.println("\nO paciente não foi excluído!");
-                                        }
-                                    } else{
+                                    if(sis.verificarAnamnesePaciente(numero)){
+                                        System.out.println("\n\nNão foi possível deletar, pois há anamneses cadastradas no nome do paciente!");
                                         break;
+                                    } else{
+                                        int decisao = -1;
+                                        while(decisao<0 || decisao>1){
+                                            System.out.print("\nConfirme sua decisão(1 - quero deletar, 0 - não quero deletar): ");
+                                            decisao = scn.nextInt();
+                                            if(decisao<0 || decisao>1){
+                                                System.out.println("\nOpção inválida!");
+                                            }
+                                        }
+                                        if(decisao == 1){
+                                            h = sis.excluirPaciente(numero);
+                                            if(h==true){
+                                                System.out.println("\nPaciente excluido com sucesso!");
+                                            } else{
+                                                System.out.println("\nO paciente não foi excluído!");
+                                            }
+                                        } else{
+                                            break;
+                                        }
                                     }
                                 } else{
                                     System.out.println("Não existe paciente cadastrado com esse núemro CNS!");
@@ -284,12 +314,12 @@ public class Main {
                                     pacientesNome = sis.retornarPacientes(nome);
                                     anamneses = sis.listarAnamneses(pacientesNome);
                                     
-                                    System.out.printf("%s%10s%20s","Anamneses", "Nome", "Nome da mãe");
+                                    System.out.printf("%s%10s%40s","Anamneses", "Nome", "Nome da mãe");
                                     int cont = 0;
                                     for (int i = 0; i < anamneses.length; i++) {
                                         if(anamneses[i]!= null){
                                             cont++;
-                                            System.out.printf("\n%d%s%3s%15s%43s",i,":",anamneses[i].id, anamneses[i].paciente.nome,anamneses[i].paciente.nomeMae);
+                                            System.out.printf("\n%d%-3s%-11s%-35s%-30s",i,":",anamneses[i].id, anamneses[i].paciente.nome,anamneses[i].paciente.nomeMae);
                                         }
                                     }
                                     System.out.print("\n\nInsira a anamnese desejada: ");
@@ -314,6 +344,64 @@ public class Main {
                                 
                                 break;
                             case 3:
+                                System.out.print("\nInforme o nome do Paciente: ");
+                                nome = scn.next();
+
+                                if(sis.verificarPacienteNome(nome)){
+                                    Paciente[] pacientesNome;
+                                    Anamnese[] anamneses;
+                                    pacientesNome = sis.retornarPacientes(nome);
+                                    anamneses = sis.listarAnamneses(pacientesNome);
+                                    
+                                    System.out.printf("%s%10s%20s","Anamneses", "Nome", "Nome da mãe");
+                                    int cont = 0;
+                                    for (int i = 0; i < anamneses.length; i++) {
+                                        if(anamneses[i]!= null){
+                                            cont++;
+                                            System.out.printf("\n%d%s%3s%15s%43s",i,":",anamneses[i].id, anamneses[i].paciente.nome,anamneses[i].paciente.nomeMae);
+                                        }
+                                    }
+                                    System.out.print("\n\nInsira a anamnese desejada: ");
+                                    int opcao2 = scn.nextInt();
+                                    
+                                    while(opcao2<0 || opcao2 >= cont){
+                                        System.out.println("Opção inválida");
+                                        System.out.print("\nInsira a anamnese desejada: ");
+                                        opcao2 = scn.nextInt();
+                                    }
+                                    a.paciente = anamneses[opcao2].paciente;
+                                    
+                                System.out.print("\n---------------------------------------------");
+                                System.out.println("\nInsira as devidas informações sobre a anamnese");
+                                System.out.print("---------------------------------------------");
+
+                                a.id = opcao2;
+
+                                System.out.print("\nMotivo: ");
+                                a.motivo = scn.next();
+
+                                System.out.print("\nHistorico: ");
+                                a.historico = scn.next();
+
+                                System.out.print("\nQueixa: ");
+                                a.queixa = scn.next();
+
+
+                                System.out.print("---------------------------------------------");
+                                
+                                    Boolean ha = sis.alterarAnamnese(a);
+
+                                    if(ha == true){
+                                        System.out.println("\nAnamnese alterada com sucesso!");
+                                    } else{
+                                    System.out.println("\nNão foi possível alterar a ananese!");
+                                }
+                                System.out.print("---------------------------------------------");
+                                
+                                } else{
+                                    System.out.println("\nNão há paciente com esse nome!\n");
+                                }
+                                
                                 break;
                             case 4:
                                 System.out.print("---------------------------------------------");
@@ -364,7 +452,7 @@ public class Main {
                                             nomeFinal = nomeCortado.concat("(...)");
                                         } 
                                         
-                                        System.out.printf("\n%3s%s%16s%-13d%-38s%-43s%-40s%s"," ",i," ",anamneses[i].paciente.numCNS,nomeFinal,anamneses[i].motivo, anamneses[i].historico, anamneses[i].queixa);
+                                        System.out.printf("\n%3s%s%16s%-13d%-38s%-43s%-40s%s"," ",anamneses[i].id," ",anamneses[i].paciente.numCNS,nomeFinal,anamneses[i].motivo, anamneses[i].historico, anamneses[i].queixa);
                                     }
                                 }
                                 System.out.print("\n---------------------------------------------");
